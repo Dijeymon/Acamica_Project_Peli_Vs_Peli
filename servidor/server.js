@@ -8,7 +8,7 @@ const controller = require("./controller/competencias.controller");
 const app = express();
 
 //  Settings
-app.set("port", process.env.PORT || 8080);
+app.set("port", process.env.PORT || 3000);
 
 //  Middlewares
 app.use(morgan("dev"));
