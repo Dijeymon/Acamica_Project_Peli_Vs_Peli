@@ -10,16 +10,16 @@ function CompetenciasController() {
     // Se obtiene de la api el listado de competencias
     $.getJSON(server + "/competencias", function(data) {
       // Se carga la información obtenida en el DOM
-      self.cargarCompetencias(data.competencias);
+      self.cargarCompetencias(data);
     });
   }),
-    (this.cargarCompetencias = function(competencias) {
+    (this.cargarCompetencias = function(data) {
       // data es el listado de competencias que retornó la api (un objeto json)
       var self = this;
       // Oculto la plantilla
       $(".competenciaPlantilla").hide();
       // Se recorren iterativamente, uno a uno, los resultados de competencias
-      var cantidad = competencias.length;
+      var cantidad = data.length;
       var idColor = 1;
       var idColorCrece = true;
       for (i = 0; i < cantidad; i++) {
@@ -31,12 +31,12 @@ function CompetenciasController() {
         $(divCompetencia)
           .find(".link")
           .each(function() {
-            $(this).attr("href", $(this).attr("href") + competencias[i].id);
+            $(this).attr("href", $(this).attr("href") + data[i].id);
           });
         // Se coloca el nombre de cada competencia
         $(divCompetencia)
           .find(".titulo")
-          .text(competencias[i].nombre);
+          .text(data[i].nombre);
         $(divCompetencia)
           .find(".card")
           .addClass("color" + idColor);
@@ -62,7 +62,7 @@ function CompetenciasController() {
       // Como luego se necesita usar "this" dentro de la función de callback, se guarda en self la referencia a CompetenciasController
       var self = this;
       // Se obtiene de la api el detalle de una competencia
-      var opciones = $.getJSON(server + "/competencias/" + id, function(data) {
+      $.getJSON(server + "/competencias/" + id, function(data) {
         // Se carga la información obtenida en el DOM
         self.cargarCompetencia(id, data);
       });
@@ -84,7 +84,7 @@ function CompetenciasController() {
       // Como luego se necesita usar "this" dentro de la función de callback, se guarda en self la referencia a CompetenciasController
       var self = this;
       // Se obtienen de la api las opciones de películas
-      var opciones = $.getJSON(
+      /*var opciones =*/ $.getJSON(
         server + "/competencias/" + id + "/peliculas",
         function(data) {
           // Se cargan las opciones en el DOM
@@ -131,13 +131,9 @@ function CompetenciasController() {
         // Se carga la opción "sin seleccionar" que corresponde a todos los géneros
         $("#genero").append("<option value='0'>Todos</option>");
         // Se recorren y cargan uno a uno los géneros retornados por el backend (data es un array de objetos json)
-        for (i = 0; i < data.generos.length; i++) {
+        for (i = 0; i < data.length; i++) {
           $("#genero").append(
-            "<option value='" +
-              data.generos[i].id +
-              "'>" +
-              data.generos[i].nombre +
-              "</option>"
+            "<option value='" + data[i].id + "'>" + data[i].nombre + "</option>"
           );
         }
       });
@@ -151,13 +147,9 @@ function CompetenciasController() {
         // Se carga la opción "sin seleccionar" que corresponde a todos/as los/as directores/as
         $("#director").append("<option value='0'>Todos/as</option>");
         // Se recorren y cargan uno/a a uno/a los/as directores/as retornados por el backend (data es un array de objetos json)
-        for (i = 0; i < data.directores.length; i++) {
+        for (i = 0; i < data.length; i++) {
           $("#director").append(
-            "<option value='" +
-              data.directores[i].id +
-              "'>" +
-              data.directores[i].nombre +
-              "</option>"
+            "<option value='" + data[i].id + "'>" + data[i].nombre + "</option>"
           );
         }
       });
@@ -170,14 +162,10 @@ function CompetenciasController() {
         $("#actor").empty();
         // Se carga la opción "sin seleccionar" que corresponde a todos/as los/as actores/actrices
         $("#actor").append("<option value='0'>Todos/as</option>");
-        for (i = 0; i < data.actores.length; i++) {
+        for (i = 0; i < data.length; i++) {
           // Se recorren y cargan uno/a a uno/a los/as actores/actrices retornados por el backend (data es un array de objetos json)
           $("#actor").append(
-            "<option value='" +
-              data.actores[i].id +
-              "'>" +
-              data.actores[i].nombre +
-              "</option>"
+            "<option value='" + data[i].id + "'>" + data[i].nombre + "</option>"
           );
         }
       });
@@ -187,13 +175,10 @@ function CompetenciasController() {
       // Como luego se necesita usar "this" dentro de la función de callback, se guarda en self la referencia a CompetenciasController
       var self = this;
       // Se obtienen del backend los resultados de las competencias
-      var opciones = $.getJSON(
-        server + "/competencias/" + id + "/resultados",
-        function(data) {
-          // Se cargan los resultados en el DOM
-          self.cargarResultados(id, data);
-        }
-      );
+      $.getJSON(server + "/competencias/" + id + "/resultados", function(data) {
+        // Se cargan los resultados en el DOM
+        self.cargarResultados(id, data);
+      });
     }),
     (this.cargarResultados = function(id, data) {
       // Se carga el nombre de la competencia en el contenedor del título

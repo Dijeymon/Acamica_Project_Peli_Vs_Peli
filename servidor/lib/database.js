@@ -14,5 +14,4 @@ const connection = mysql.createConnection({
   password: APP_MYSQL_PASSWORD,
   database: APP_MYSQL_DATABASE
 });
-
 module.exports = connection;

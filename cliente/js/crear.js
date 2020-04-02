@@ -16,11 +16,16 @@ $(function() {
     },
     // En caso de error por validación, se muestra el mensaje de error en el contenedor para tal fin
     error: function(response, status, xhr) {
-      if (response.status == 422) {
+      if (response.status == 404) {
         Swal.fire({
-          title: "Error!",
-          text: "El nombre de la competencia ya existe",
+          text: "Debe ingresar el nombre de la competencia",
           icon: "error",
+          confirmButtonText: "OK"
+        });
+      } else if (response.status == 422) {
+        Swal.fire({
+          text: "El nombre de la competencia ya existe",
+          icon: "warning",
           confirmButtonText: "OK"
         });
       }

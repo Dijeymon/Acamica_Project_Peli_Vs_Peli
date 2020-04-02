@@ -16,7 +16,6 @@ $(function() {
     // En caso de error, se muestra el mensaje de error en el contenedor para tal fin
     error: function(response, status, xhr) {
       Swal.fire({
-        title: "Error!",
         text: "No se han podido restablecer las votaciones",
         icon: "error",
         confirmButtonText: "OK"
