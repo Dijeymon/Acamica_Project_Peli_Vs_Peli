@@ -28,6 +28,13 @@ $(function() {
           icon: "warning",
           confirmButtonText: "OK"
         });
+      } else if (response.status == 409) {
+        Swal.fire({
+          text:
+            "!No se dispone de la cantidad de peliculas necesarias para registrar una competencia!",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
       }
     }
   });

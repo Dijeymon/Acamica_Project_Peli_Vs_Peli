@@ -160,24 +160,32 @@ async function createCompetition(req, res) {
         const genero = req.body.genero > 0 ? req.body.genero : undefined;
         const director = req.body.director > 0 ? req.body.director : undefined;
         const actor = req.body.actor > 0 ? req.body.actor : undefined;
-
-        conn.query(
-          "INSERT INTO competencia (nombre, genero_id, director_id, actor_id) VALUES(?,?,?,?)",
-          [nombre, genero, director, actor],
-          (err, result, field) => {
-            if (err) return res.status(502).json(err.sqlMessage);
-            if (
-              !nombre ||
-              (!nombre && director) ||
-              (!nombre && genero) ||
-              (!nombre && actor)
-            ) {
-              return res.status(404).json(err);
-            } else {
-              res.send(JSON.stringify(result));
-            }
+        if (!nombre) {
+          return res.status(404).json(error);
+        } else {
+          if (genero) {
+            sql = `select * from pelicula where genero_id = ${genero}`;
+          } else if (actor) {
+            sql = `select * from actor_pelicula where actor_id = ${actor}`;
+          } else if (director) {
+            sql = `select * from director_pelicula where director_id = ${director}`;
           }
-        );
+          conn.query(sql, (err, result, field) => {
+            if (err) return res.status(523).json(err);
+            if (result.length < 2) {
+              return res.status(409).json(err);
+            } else {
+              conn.query(
+                "INSERT INTO competencia (nombre, genero_id, director_id, actor_id) VALUES(?,?,?,?)",
+                [nombre, genero, director, actor],
+                (err, result, field) => {
+                  if (err) return res.status(502).json(err.sqlMessage);
+                  res.send(JSON.stringify(result));
+                }
+              );
+            }
+          });
+        }
       }
     }
   );
